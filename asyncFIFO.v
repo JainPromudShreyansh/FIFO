@@ -16,19 +16,19 @@ input [width-1:0] wdata;
 output reg full,empty,rerr,werr;
 output reg [width-1:0] rdata;
 
-reg [ptr_width-1:0] rptr,rptr_wclk,wptr,wptr_rclk;
+reg [ptr_width-1:0] rptr,rptr_wclk,wptr,wptr_rclk,rptr_gray,wptr_gray;
 reg wtoggle_f,wtoggle_f_rclk,rtoggle_f,rtoggle_f_wclk;
 
 reg [width-1:0] mem [depth-1:0];
 
 //Code for pointer and Toggle Flag synchronization
 always @(posedge rclk) begin
-	wptr_rclk<=wptr;
+	wptr_rclk<=wptr_gray;
 	wtoggle_f_rclk<=wtoggle_f;
 end
 
 always @(posedge wclk) begin
-	rptr_wclk<=rptr;
+	rptr_wclk<=rptr_gray;
 	rtoggle_f_wclk<=rtoggle_f;
 end
 
@@ -43,7 +43,7 @@ end
 //empty condition
 always @(*) begin
 	empty=0;
-	if(rptr==wptr_rclk) begin
+	if(rptr_gray==wptr_rclk) begin
 		if(rtoggle_f==wtoggle_f_rclk) empty=1;
 	end
 end
@@ -70,6 +70,7 @@ always @(posedge wclk) begin
 			werr=0;
 			if(wptr==depth-1) wtoggle_f=~wtoggle_f;
 			wptr=wptr+1;
+			wptr_gray={wptr[3],wptr[3:1]^wptr[2:0]};//// using gray code to avoid intermediate states while F/F switching 
 			end
 		end
 	end
@@ -86,9 +87,9 @@ always @(posedge rclk) begin
 			rerr=0;
 			if(rptr==depth-1) rtoggle_f=~rtoggle_f;
 			rptr=rptr+1;
+			rptr_gray={rptr[3],rptr[3:1]^rptr[2:0]};//// using gray code to avoid intermediate states while F/F switching 
 			end
 		end
 	end
 end
 endmodule
-
