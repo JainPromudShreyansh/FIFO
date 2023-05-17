@@ -7,5 +7,5 @@ Here data read and write operations use the same clock frequency. Usually, they 
 Here data read and write operations use the same clock frequency. Usually, they are used for clock domain crossing (CDC) which means it is used in systems where data need to pass from one clock domain to another.
 
 __Note:__
-- This repository contains RTL code (verilog based) for a *Synchronous and asynchronous FIFO Design and Testbench*.
+- This repository contains RTL code (verilog based) for a *Synchronous and Asynchronous FIFO Design and Testbench*.
 - ModelSim-Intel® FPGAs Standard Edition Software Version 18.1 used to exxecute these code.
